@@ -9,7 +9,10 @@ const fs_1 = __importDefault(require("fs"));
 class FileSystem {
     constructor() { }
     saveTemporalImage(file, userId) {
+        // Crear carpetas
         const path = this.createUserFolder(userId);
+        // Nombre archivo
+        const fileName = '';
     }
     createUserFolder(userId) {
         const pathUser = path_1.default.resolve(__dirname, '../uploads', userId);
@@ -20,6 +23,10 @@ class FileSystem {
             fs_1.default.mkdirSync(pathUserTemp);
         }
         return pathUserTemp;
+    }
+    generateUniqueName(originalName) {
+        const arrName = originalName.split('.');
+        const extension = arrName[arrName.length - 1];
     }
 }
 exports.default = FileSystem;

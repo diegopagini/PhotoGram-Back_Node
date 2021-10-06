@@ -3,12 +3,17 @@
 import { FileUpload } from '../interfaces/file-upload.interface';
 import path from 'path';
 import fs from 'fs';
+import uniqid from 'uniqid';
 
 export default class FileSystem {
 	constructor() {}
 
 	public saveTemporalImage(file: FileUpload, userId: string) {
+		// Crear carpetas
 		const path: string = this.createUserFolder(userId);
+
+		// Nombre archivo
+		const fileName: string = this.generateUniqueName(file.name);
 	}
 
 	private createUserFolder(userId: string): string {
@@ -22,5 +27,13 @@ export default class FileSystem {
 		}
 
 		return pathUserTemp;
+	}
+
+	private generateUniqueName(originalName: string): string {
+		const arrName = originalName.split('.');
+		const extension = arrName[arrName.length - 1];
+		const uniqueId = uniqid();
+
+		return `${uniqueId}.${extension}`;
 	}
 }
