@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const user_model_1 = require("../models/user.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const token_1 = __importDefault(require("../classes/token"));
+const auth_1 = require("../middlewares/auth");
 const userRoutes = (0, express_1.Router)();
 // Crear usuario
 userRoutes.post('/create', (req, resp) => {
@@ -18,9 +20,15 @@ userRoutes.post('/create', (req, resp) => {
     };
     user_model_1.User.create(user)
         .then((userDB) => {
-        resp.json({
+        const userToken = token_1.default.getJwtToken({
+            _id: userDB._id,
+            name: userDB.name,
+            email: userDB.email,
+            avatar: userDB.avatar,
+        });
+        return resp.json({
             ok: true,
-            userDB,
+            token: userToken,
         });
     })
         .catch((err) => {
@@ -45,9 +53,15 @@ userRoutes.post('/login', (req, resp) => {
             });
         }
         if (userDB.comparePassword(body.password)) {
+            const userToken = token_1.default.getJwtToken({
+                _id: userDB._id,
+                name: userDB.name,
+                email: userDB.email,
+                avatar: userDB.avatar,
+            });
             return resp.json({
                 ok: true,
-                token: 'asdasd12315ajsdi',
+                token: userToken,
             });
         }
         else {
@@ -56,6 +70,13 @@ userRoutes.post('/login', (req, resp) => {
                 message: 'Usuario/Contraseña no son correctas ***',
             });
         }
+    });
+});
+// Actualizar usuario
+userRoutes.post('/update', [auth_1.checkToken], (req, resp) => {
+    resp.json({
+        ok: true,
+        user: req.user,
     });
 });
 exports.default = userRoutes;
