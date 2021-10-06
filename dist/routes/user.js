@@ -8,6 +8,7 @@ const express_1 = require("express");
 const user_model_1 = require("../models/user.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userRoutes = (0, express_1.Router)();
+// Crear usuario
 userRoutes.post('/create', (req, resp) => {
     const user = {
         name: req.body.name,
@@ -27,6 +28,34 @@ userRoutes.post('/create', (req, resp) => {
             ok: false,
             err,
         });
+    });
+});
+// Login
+userRoutes.post('/login', (req, resp) => {
+    const body = req.body;
+    user_model_1.User.findOne({
+        email: body.email,
+    }, (err, userDB) => {
+        if (err)
+            throw err;
+        if (!userDB) {
+            return resp.json({
+                ok: false,
+                message: 'Usuario/Contraseña no son correctas',
+            });
+        }
+        if (userDB.comparePassword(body.password)) {
+            return resp.json({
+                ok: true,
+                token: 'asdasd12315ajsdi',
+            });
+        }
+        else {
+            return resp.json({
+                ok: false,
+                message: 'Usuario/Contraseña no son correctas ***',
+            });
+        }
     });
 });
 exports.default = userRoutes;
