@@ -74,6 +74,31 @@ userRoutes.post('/login', (req, resp) => {
 });
 // Actualizar usuario
 userRoutes.post('/update', [auth_1.checkToken], (req, resp) => {
+    const user = {
+        name: req.body.name || req.user.name,
+        email: req.body.email || req.user.email,
+        avatar: req.body.avatar || req.user.avatar,
+    };
+    user_model_1.User.findByIdAndUpdate(req.user._id, user, { new: true }, (err, userDB) => {
+        if (err)
+            throw err;
+        if (!userDB) {
+            return resp.json({
+                ok: false,
+                message: 'No existe un usuario con ese ID',
+            });
+        }
+        const userToken = token_1.default.getJwtToken({
+            _id: userDB._id,
+            name: userDB.name,
+            email: userDB.email,
+            avatar: userDB.avatar,
+        });
+        return resp.json({
+            ok: true,
+            token: userToken,
+        });
+    });
     resp.json({
         ok: true,
         user: req.user,
