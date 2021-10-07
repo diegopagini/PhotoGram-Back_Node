@@ -49,6 +49,24 @@ export default class FileSystem {
 		return imagesTemp;
 	}
 
+	public getPhotoByUrl(userId: string, img: string) {
+		const pathPhoto: string = path.resolve(
+			__dirname,
+			'../uploads',
+			userId,
+			'posts',
+			img
+		);
+
+		const exists = fs.existsSync(pathPhoto);
+
+		if (!exists) {
+			return path.resolve(__dirname, '../assets/400x250.jpg');
+		}
+
+		return pathPhoto;
+	}
+
 	private getImagesFromTemp(userId: string) {
 		const pathTemp = path.resolve(__dirname, '../uploads', userId, 'temp');
 		return fs.readdirSync(pathTemp) || [];

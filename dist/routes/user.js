@@ -104,4 +104,11 @@ userRoutes.post('/update', [auth_1.checkToken], (req, resp) => {
         user: req.user,
     });
 });
+userRoutes.get('/', [auth_1.checkToken], (req, resp) => {
+    const user = req.user;
+    resp.json({
+        ok: true,
+        user,
+    });
+});
 exports.default = userRoutes;

@@ -113,4 +113,13 @@ userRoutes.post('/update', [checkToken], (req: any, resp: Response) => {
 	});
 });
 
+userRoutes.get('/', [checkToken], (req: any, resp: Response) => {
+	const user = req.user;
+
+	resp.json({
+		ok: true,
+		user,
+	});
+});
+
 export default userRoutes;

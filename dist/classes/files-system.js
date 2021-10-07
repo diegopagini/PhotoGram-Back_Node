@@ -43,6 +43,14 @@ class FileSystem {
         });
         return imagesTemp;
     }
+    getPhotoByUrl(userId, img) {
+        const pathPhoto = path_1.default.resolve(__dirname, '../uploads', userId, 'posts', img);
+        const exists = fs_1.default.existsSync(pathPhoto);
+        if (!exists) {
+            return path_1.default.resolve(__dirname, '../assets/400x250.jpg');
+        }
+        return pathPhoto;
+    }
     getImagesFromTemp(userId) {
         const pathTemp = path_1.default.resolve(__dirname, '../uploads', userId, 'temp');
         return fs_1.default.readdirSync(pathTemp) || [];

@@ -81,4 +81,11 @@ postRoutes.post('/upload', [auth_1.checkToken], (req, resp) => __awaiter(void 0,
         file: file.mimetype,
     });
 }));
+// Mostrat imagenes
+postRoutes.get('imagen/:userid/:img', (req, resp) => {
+    const userId = req.params.userid;
+    const img = req.params.img;
+    const pathPhoto = fileSystem.getPhotoByUrl(userId, img);
+    resp.sendFile(pathPhoto);
+});
 exports.default = postRoutes;
