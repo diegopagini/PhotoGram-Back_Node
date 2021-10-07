@@ -23,6 +23,8 @@ const fileSystem = new files_system_1.default();
 postRoutes.post('/', [auth_1.checkToken], (req, resp) => {
     const body = req.body;
     body.user = req.user._id;
+    const images = fileSystem.moveImagesFromTempToPost(req.user._id);
+    body.img = images;
     post_model_1.Post.create(body)
         .then((postDB) => __awaiter(void 0, void 0, void 0, function* () {
         yield postDB.populate('user').execPopulate();
@@ -53,7 +55,7 @@ postRoutes.get('/', [auth_1.checkToken], (req, resp) => __awaiter(void 0, void 0
     });
 }));
 // Servicio para subir archivos
-postRoutes.post('/upload', [auth_1.checkToken], (req, resp) => {
+postRoutes.post('/upload', [auth_1.checkToken], (req, resp) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.files) {
         return resp.status(400).json({
             ok: false,
@@ -73,10 +75,10 @@ postRoutes.post('/upload', [auth_1.checkToken], (req, resp) => {
             message: 'No se subió una imagen',
         });
     }
-    fileSystem.saveTemporalImage(file, req.user._id);
+    yield fileSystem.saveTemporalImage(file, req.user._id);
     resp.json({
         ok: true,
         file: file.mimetype,
     });
-});
+}));
 exports.default = postRoutes;

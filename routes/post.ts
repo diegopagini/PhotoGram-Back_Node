@@ -1,6 +1,6 @@
 /** @format */
 
-import { Request, Response, Router } from 'express';
+import { Response, Router } from 'express';
 import { FileUpload } from '../interfaces/file-upload.interface';
 import { checkToken } from '../middlewares/auth';
 import { Post } from '../models/post.model';
@@ -13,6 +13,8 @@ const fileSystem = new FileSystem();
 postRoutes.post('/', [checkToken], (req: any, resp: Response) => {
 	const body = req.body;
 	body.user = req.user._id;
+	const images: string[] = fileSystem.moveImagesFromTempToPost(req.user._id);
+	body.img = images;
 
 	Post.create(body)
 		.then(async (postDB: any) => {
@@ -49,7 +51,7 @@ postRoutes.get('/', [checkToken], async (req: any, resp: Response) => {
 });
 
 // Servicio para subir archivos
-postRoutes.post('/upload', [checkToken], (req: any, resp: Response) => {
+postRoutes.post('/upload', [checkToken], async (req: any, resp: Response) => {
 	if (!req.files) {
 		return resp.status(400).json({
 			ok: false,
@@ -73,7 +75,7 @@ postRoutes.post('/upload', [checkToken], (req: any, resp: Response) => {
 		});
 	}
 
-	fileSystem.saveTemporalImage(file, req.user._id);
+	await fileSystem.saveTemporalImage(file, req.user._id);
 
 	resp.json({
 		ok: true,
