@@ -38,7 +38,7 @@ postRoutes.post('/', [auth_1.checkToken], (req, resp) => {
     });
 });
 // Obtener posts paginados
-postRoutes.get('/', [auth_1.checkToken], (req, resp) => __awaiter(void 0, void 0, void 0, function* () {
+postRoutes.get('/', (req, resp) => __awaiter(void 0, void 0, void 0, function* () {
     let page = Number(req.query.page) || 1;
     let skip = page - 1;
     skip = skip * 10;
