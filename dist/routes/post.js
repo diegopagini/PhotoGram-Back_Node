@@ -27,7 +27,7 @@ postRoutes.post('/', [auth_1.checkToken], (req, resp) => {
     body.img = images;
     post_model_1.Post.create(body)
         .then((postDB) => __awaiter(void 0, void 0, void 0, function* () {
-        yield postDB.populate('user').execPopulate();
+        yield postDB.populate('user', '-password').execPopulate();
         resp.json({
             ok: true,
             post: postDB,
@@ -81,7 +81,7 @@ postRoutes.post('/upload', [auth_1.checkToken], (req, resp) => __awaiter(void 0,
         file: file.mimetype,
     });
 }));
-// Mostrat imagenes
+// Mostrar imagenes
 postRoutes.get('imagen/:userid/:img', (req, resp) => {
     const userId = req.params.userid;
     const img = req.params.img;

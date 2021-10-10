@@ -18,7 +18,7 @@ postRoutes.post('/', [checkToken], (req: any, resp: Response) => {
 
 	Post.create(body)
 		.then(async (postDB: any) => {
-			await postDB.populate('user').execPopulate();
+			await postDB.populate('user', '-password').execPopulate();
 
 			resp.json({
 				ok: true,
@@ -83,7 +83,7 @@ postRoutes.post('/upload', [checkToken], async (req: any, resp: Response) => {
 	});
 });
 
-// Mostrat imagenes
+// Mostrar imagenes
 postRoutes.get('imagen/:userid/:img', (req: any, resp: Response) => {
 	const userId = req.params.userid;
 	const img = req.params.img;
